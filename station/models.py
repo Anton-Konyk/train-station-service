@@ -17,7 +17,7 @@ class Crew(models.Model):
 
 def movie_image_file_path(instance, filename):
     _, extension = os.path.splitext(filename)
-    filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
+    filename = f"{slugify(instance.name)}-{uuid.uuid4()}{extension}"
 
     return os.path.join("uploads/train/", filename)
 
@@ -37,7 +37,7 @@ class Train(models.Model):
     train_type = models.ForeignKey(TrainType, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.number
+        return str(self.number)
 
     class Meta:
         ordering = ["number"]
@@ -87,6 +87,7 @@ class Order(models.Model):
 class Journey(models.Model):
     route = models.ForeignKey(Route, on_delete=models.CASCADE)
     train = models.ForeignKey(Train, on_delete=models.CASCADE)
+    crews = models.ManyToManyField(Crew, related_name="journeys")
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
 
