@@ -14,6 +14,9 @@ class Crew(models.Model):
     def __str__(self):
         return self.first_name + " " + self.last_name
 
+    class Meta:
+        verbose_name_plural = "crews"
+
 
 def movie_image_file_path(instance, filename):
     _, extension = os.path.splitext(filename)
@@ -29,6 +32,9 @@ class TrainType(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "train_types"
+
 
 class Train(models.Model):
     number = models.IntegerField(unique=True)
@@ -41,6 +47,7 @@ class Train(models.Model):
 
     class Meta:
         ordering = ["number"]
+        verbose_name_plural = "trains"
 
 
 class Station(models.Model):
@@ -53,6 +60,11 @@ class Station(models.Model):
 
     class Meta:
         ordering = ["name"]
+        indexes = [
+            models.Index(fields=["name"]),
+            models.Index(fields=["latitude", "longitude"])
+        ]
+        verbose_name_plural = "stations"
 
 
 class Route(models.Model):
@@ -69,6 +81,7 @@ class Route(models.Model):
 
     class Meta:
         unique_together = ["source", "destination"]
+        verbose_name_plural = "routes"
 
 
 class Order(models.Model):
