@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import (
     Crew,
+    Facility,
     TrainType,
     Train,
     Station,
@@ -23,6 +24,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Crew)
+admin.site.register(Facility)
 admin.site.register(TrainType)
 admin.site.register(Train)
 admin.site.register(Station)
