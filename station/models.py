@@ -18,6 +18,17 @@ class Crew(models.Model):
         verbose_name_plural = "crews"
 
 
+class Facility(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        verbose_name_plural = "facilities"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
 def movie_image_file_path(instance, filename):
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.name)}-{uuid.uuid4()}{extension}"
@@ -41,6 +52,11 @@ class Train(models.Model):
     cargo_num = models.IntegerField()
     places_in_cargo = models.IntegerField()
     train_type = models.ForeignKey(TrainType, on_delete=models.CASCADE)
+    facilities = models.ManyToManyField(Facility, related_name="trains", blank=True)
+
+    @property
+    def is_small(self):
+        return self.cargo_num * self.places_in_cargo <= 210
 
     def __str__(self):
         return str(self.number)
