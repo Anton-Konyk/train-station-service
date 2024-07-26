@@ -10,7 +10,8 @@ from station.models import (
     TrainType,
     Train,
     Facility,
-    Station
+    Station,
+    Route,
 )
 from station.serializers import (
     CrewSerializer,
@@ -19,7 +20,8 @@ from station.serializers import (
     TrainListSerializer,
     TrainRetrieveSerializer,
     FacilitySerializer,
-    StationSerializer
+    StationSerializer,
+    RouteSerializer,
 )
 
 
@@ -101,7 +103,10 @@ class TrainViewSet(
         facilities = self.request.query_params.get("facilities")
         if facilities:
             facilities_ids = self._params_to_ints(facilities)
-            queryset = Train.objects.filter(facilities__id__in=facilities_ids).distinct()
+            queryset = (
+                Train.objects.filter(
+                    facilities__id__in=facilities_ids
+                ).distinct())
 
         if self.action == ("list", "retrieve"):
             queryset = Train.objects.prefetch_related("facilities")
@@ -135,3 +140,54 @@ class StationViewSet(viewsets.ModelViewSet):
     serializer_class = StationSerializer
     pagination_class = StationResultsSetPagination
 
+
+class RouteResultsSetPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+
+class RouteViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet
+):
+    queryset = Route.objects.all()
+    serializer_class = RouteSerializer
+    pagination_class = RouteResultsSetPagination
+
+    def get_queryset(self):
+        queryset = self.queryset
+        source = self.request.query_params.get("source")
+        destination = self.request.query_params.get("destination")
+        if source:
+            source_ids = (Station.objects.filter(name__icontains=source).
+                          values_list("id"))
+            queryset = Route.objects.filter(source__id__in=source_ids)
+        if destination:
+            destination_ids = Station.objects.filter(
+                name__icontains=destination).values_list("id")
+            queryset = (
+                Route.objects.filter(destination__id__in=destination_ids))
+
+        if self.action == ("list", "retrieve"):
+            queryset = Route.objects.prefetch_related("source")
+
+        return queryset
+
+        # @extend_schema(
+        #     parameters=[
+        #         OpenApiParameter(
+        #             "facilities",
+        #             type={"type": "array", "items": {"type": "number"}},
+        #             description="Filter by facility id ex. ?facilities=2,3",
+        #
+        #         ),
+        #     ]
+        # )
+
+    def list(self, request, *args, **kwargs):
+        """Get list of routes."""
+        return super().list(request, *args, **kwargs)
