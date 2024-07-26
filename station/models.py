@@ -82,6 +82,38 @@ class Station(models.Model):
         ]
         verbose_name_plural = "stations"
 
+    @staticmethod
+    def validate_coordinates(coordinates: list, error_to_raise):
+        for coord in coordinates:
+            if not (coord["min_value"] <=
+                    coord["parameter"] <=
+                    coord["max_value"]):
+                raise error_to_raise(
+                    {
+                        coord["name"]:
+                            f"{coord["name"]} must be in range "
+                            f"[{coord["min_value"]}, {coord["max_value"]}] "
+                            f"not {coord["parameter"]}"
+                    }
+                )
+
+    def clean(self):
+        coordinates = [
+            {
+                "name": "latitude",
+                "parameter": self.latitude,
+                "min_value": -90,
+                "max_value": 90
+             },
+            {
+                "name": "longitude",
+                "parameter": self.longitude,
+                "min_value": -180,
+                "max_value": 180
+            }
+        ]
+        Station.validate_coordinates(coordinates, ValueError)
+
 
 class Route(models.Model):
     source = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="route_from")
