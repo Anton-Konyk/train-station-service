@@ -112,7 +112,7 @@ class Station(models.Model):
                 "max_value": 180
             }
         ]
-        Station.validate_coordinates(coordinates, ValueError)
+        Station.validate_coordinates(coordinates, ValidationError)
 
 
 class Route(models.Model):
