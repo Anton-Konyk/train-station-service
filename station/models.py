@@ -126,6 +126,8 @@ class Route(models.Model):
     def clean(self):
         if self.source == self.destination:
             raise ValidationError("Source and destination stations cannot be the same.")
+        if self.distance <= 0:
+            raise ValidationError("Distance must be above zero")
 
     class Meta:
         unique_together = ["source", "destination"]
