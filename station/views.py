@@ -5,9 +5,22 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 
-from station.models import Crew, TrainType, Train, Facility
-from station.serializers import CrewSerializer, TrainTypeSerializer, TrainTypeImageSerializer, TrainListSerializer, \
-    TrainRetrieveSerializer, FacilitySerializer
+from station.models import (
+    Crew,
+    TrainType,
+    Train,
+    Facility,
+    Station
+)
+from station.serializers import (
+    CrewSerializer,
+    TrainTypeSerializer,
+    TrainTypeImageSerializer,
+    TrainListSerializer,
+    TrainRetrieveSerializer,
+    FacilitySerializer,
+    StationSerializer
+)
 
 
 class CrewViewSet(viewsets.ModelViewSet):
@@ -109,3 +122,16 @@ class TrainViewSet(
     def list(self, request, *args, **kwargs):
         """Get list of trains."""
         return super().list(request, *args, **kwargs)
+
+
+class StationResultsSetPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+
+class StationViewSet(viewsets.ModelViewSet):
+    queryset = Station.objects.all()
+    serializer_class = StationSerializer
+    pagination_class = StationResultsSetPagination
+
