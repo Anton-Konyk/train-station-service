@@ -1,4 +1,5 @@
 from rest_framework import viewsets, mixins, status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -53,6 +54,12 @@ class TrainTypeViewSet(
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class TrainResultsSetPagination(PageNumberPagination):
+    page_size = 2
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+
 class TrainViewSet(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
@@ -62,6 +69,7 @@ class TrainViewSet(
 ):
     queryset = Train.objects.all()
     serializer_class = TrainListSerializer
+    pagination_class = TrainResultsSetPagination
 
     @staticmethod
     def _params_to_ints(query_string):
