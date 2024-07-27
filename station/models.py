@@ -55,8 +55,8 @@ class Train(models.Model):
     facilities = models.ManyToManyField(Facility, related_name="trains", blank=True)
 
     @property
-    def is_small(self):
-        return self.cargo_num * self.places_in_cargo <= 210
+    def num_seats(self):
+        return self.cargo_num * self.places_in_cargo
 
     def __str__(self):
         return str(self.number)
