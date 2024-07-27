@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from station.models import (
@@ -8,6 +9,8 @@ from station.models import (
     Station,
     Route,
     Journey,
+    Ticket,
+    Order,
 )
 
 
@@ -165,3 +168,44 @@ class JourneyRetrieveSerializer(JourneySerializer):
             "arrival_time",
             "taken_seats"
         )
+
+
+class TicketSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ticket
+        fields = ("id", "cargo", "seat", "journey")
+
+    def validate(self, attrs):
+        data = super(TicketSerializer, self).validate(attrs)
+        Ticket.validate_ticket(
+            attrs["cargo"],
+            attrs["seat"],
+            attrs["journey"].train,
+            serializers.ValidationError
+        )
+        return data
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
+
+    class Meta:
+        model = Order
+        fields = ("id", "created_at", "tickets")
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            ticket_data = validated_data.pop("tickets")
+            order = Order.objects.create(**validated_data)
+            for ticket_data in ticket_data:
+                Ticket.objects.create(order=order, **ticket_data)
+            return order
+
+
+class TicketListSerializer(TicketSerializer):
+    journey = JourneyListSerializer(read_only=True)
+
+
+class OrderListSerializer(OrderSerializer):
+    tickets = TicketListSerializer(many=True, read_only=True)
