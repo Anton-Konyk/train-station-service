@@ -6,7 +6,8 @@ from station.models import (
     Train,
     Facility,
     Station,
-    Route
+    Route,
+    Journey,
 )
 
 
@@ -46,7 +47,7 @@ class TrainSerializer(serializers.ModelSerializer):
             "number",
             "cargo_num",
             "places_in_cargo",
-            "is_small",
+            "num_seats",
             "train_type",
             "facilities"
         )
@@ -92,3 +93,75 @@ class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
         fields = ("id", "source", "destination", "distance")
+
+
+class JourneySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Journey
+        fields = (
+            "id",
+            "route",
+            "train",
+            "crews",
+            "departure_time",
+            "arrival_time"
+        )
+
+
+class JourneyListSerializer(serializers.ModelSerializer):
+    train_type_name = serializers.CharField(source="train.train_type.name", read_only=True)
+    train_type_image = serializers.CharField(source="train.train_type.image", read_only=True)
+    train_facilities = serializers.SlugRelatedField(
+        source="train.facilities",
+        read_only=True,
+        many=True,
+        slug_field="name"
+    )
+    train_num_seats = serializers.IntegerField(
+        source="train.num_seats",
+        read_only=True
+    )
+    tickets_available = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Journey
+        fields = (
+            "id",
+            "route",
+            "departure_time",
+            "arrival_time",
+            "train_type_name",
+            "train_type_image",
+            "train_facilities",
+            "train_num_seats",
+            "tickets_available"
+        )
+
+
+class JourneyRetrieveSerializer(JourneySerializer):
+    route = RouteSerializer(many=False, read_only=True)
+    train = TrainRetrieveSerializer(many=False, read_only=True)
+    crew = serializers.StringRelatedField(
+        many=True,
+        read_only=True,
+        source="crews"
+    )
+    taken_seats = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="seat",
+        source="tickets"
+    )
+
+    class Meta:
+        model = Journey
+        fields = (
+            "id",
+            "route",
+            "train",
+            "crew",
+            "departure_time",
+            "arrival_time",
+            "taken_seats"
+        )
