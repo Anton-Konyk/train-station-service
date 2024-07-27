@@ -1,3 +1,4 @@
+from django.db.models import Count, F
 from rest_framework import viewsets, mixins, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
@@ -12,6 +13,7 @@ from station.models import (
     Facility,
     Station,
     Route,
+    Journey,
 )
 from station.serializers import (
     CrewSerializer,
@@ -22,6 +24,9 @@ from station.serializers import (
     FacilitySerializer,
     StationSerializer,
     RouteSerializer,
+    JourneyListSerializer,
+    JourneyRetrieveSerializer,
+    JourneySerializer,
 )
 
 
@@ -191,3 +196,30 @@ class RouteViewSet(
     def list(self, request, *args, **kwargs):
         """Get list of routes."""
         return super().list(request, *args, **kwargs)
+
+
+class JourneyViewSet(viewsets.ModelViewSet):
+    queryset = Journey.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return JourneyListSerializer
+        elif self.action == "retrieve":
+            return JourneyRetrieveSerializer
+        return JourneySerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action == "list":
+            queryset = (
+                queryset
+                .select_related("train")
+                .annotate(
+                    tickets_available=(
+                     F("train__cargo_num") * F("train__places_in_cargo")
+                     - Count("tickets"))
+                )
+            )
+        elif self.action == "retrieve":
+            queryset = queryset.prefetch_related("crews")
+        return queryset.order_by("id")
