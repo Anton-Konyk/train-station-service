@@ -13,7 +13,7 @@ from station.models import (
     Facility,
     Station,
     Route,
-    Journey,
+    Journey, Order,
 )
 from station.serializers import (
     CrewSerializer,
@@ -26,7 +26,7 @@ from station.serializers import (
     RouteSerializer,
     JourneyListSerializer,
     JourneyRetrieveSerializer,
-    JourneySerializer,
+    JourneySerializer, OrderSerializer, OrderListSerializer,
 )
 
 
@@ -198,8 +198,15 @@ class RouteViewSet(
         return super().list(request, *args, **kwargs)
 
 
+class JourneyResultsSetPagination(PageNumberPagination):
+    page_size = 2
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+
 class JourneyViewSet(viewsets.ModelViewSet):
     queryset = Journey.objects.all()
+    pagination_class = JourneyResultsSetPagination
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -223,3 +230,32 @@ class JourneyViewSet(viewsets.ModelViewSet):
         elif self.action == "retrieve":
             queryset = queryset.prefetch_related("crews")
         return queryset.order_by("id")
+
+
+class OrderResultsSetPagination(PageNumberPagination):
+    page_size = 1
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    pagination_class = OrderResultsSetPagination
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user=self.request.user)
+
+        if self.action == "list":
+            queryset = queryset.prefetch_related("tickets__journey__train")
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_serializer_class(self):
+        serializer = self.serializer_class
+
+        if self.action == "list":
+            serializer = OrderListSerializer
+        return serializer
