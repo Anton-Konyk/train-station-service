@@ -1,4 +1,5 @@
 from django.db.models import Count, F
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
@@ -49,15 +50,6 @@ class TrainTypeViewSet(
 ):
     queryset = TrainType.objects.all()
     serializer_class = TrainTypeSerializer
-
-    # def get_serializer_class(self):
-    #     if self.action == "list":
-    #         return BusListSerializer
-    #     elif self.action == "retrieve":
-    #         return BusRetrieveSerializer
-    #     # elif self.action == "upload_image":
-    #     #     return BusImageSerializer
-    #     return super().get_serializer_class()  #BusSerializer
 
     @action(
         methods=["POST"],
@@ -118,19 +110,18 @@ class TrainViewSet(
 
         return queryset
 
-    # @extend_schema(
-    #     parameters=[
-    #         OpenApiParameter(
-    #             "facilities",
-    #             type={"type": "array", "items": {"type": "number"}},
-    #             description="Filter by facility id ex. ?facilities=2,3",
-    #
-    #         ),
-    #     ]
-    # )
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "facilities",
+                type={"type": "array", "items": {"type": "number"}},
+                description="Filter by facility id ex. ?facilities=2,3",
 
+            ),
+        ]
+    )
     def list(self, request, *args, **kwargs):
-        """Get list of trains."""
+        """Get list of trains with facilities."""
         return super().list(request, *args, **kwargs)
 
 
@@ -182,17 +173,22 @@ class RouteViewSet(
 
         return queryset
 
-        # @extend_schema(
-        #     parameters=[
-        #         OpenApiParameter(
-        #             "facilities",
-        #             type={"type": "array", "items": {"type": "number"}},
-        #             description="Filter by facility id ex. ?facilities=2,3",
-        #
-        #         ),
-        #     ]
-        # )
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "source",
+                type={"type": "string", "items": {"type": "name"}},
+                description="Filter by source station id ex. ?source=Berlin",
 
+            ),
+            OpenApiParameter(
+                "destination",
+                type={"type": "string", "items": {"type": "name"}},
+                description="Filter by destination station id ex. ?destination=Vien",
+
+            ),
+        ]
+    )
     def list(self, request, *args, **kwargs):
         """Get list of routes."""
         return super().list(request, *args, **kwargs)
