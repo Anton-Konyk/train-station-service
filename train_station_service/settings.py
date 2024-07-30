@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "user",
     "rest_framework",
     "rest_framework.authtoken",
+    "drf_spectacular",
 ]
 
 AUTH_USER_MODEL = "user.User"
@@ -145,7 +146,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "station.permissions.IsAdminOrIfAuthenticatedReadOnly",
     ],
-    # "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle"
@@ -160,4 +161,16 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Train Station Service API",
+    "DESCRIPTION": "Order tickets for your train trips.",
+    "VERSION": "1.0.0",
+    "SERVER_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS":  {
+        "deepLinking": True,
+        "defaultModelsExpanDepth": 2,
+        "defaultModelExpanDepth": 2,
+    },
 }
