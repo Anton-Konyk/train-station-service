@@ -33,6 +33,7 @@ class TrainTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrainType
         fields = ("id", "name", "image")
+        extra_kwargs = {"image": {"read_only": True}}
 
 
 class TrainTypeImageSerializer(serializers.ModelSerializer):
