@@ -1,4 +1,4 @@
-from django.db.models import Count, F
+from django.db.models import Count, F, Q
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins, status
 from rest_framework.pagination import PageNumberPagination
@@ -167,6 +167,14 @@ class RouteViewSet(
                 name__icontains=destination).values_list("id")
             queryset = (
                 Route.objects.filter(destination__id__in=destination_ids))
+        if source and destination:
+            source_ids = (Station.objects.filter(name__icontains=source).
+                          values_list("id"))
+            destination_ids = Station.objects.filter(
+                name__icontains=destination).values_list("id")
+            queryset = (
+                Route.objects.filter(Q(source__id__in=source_ids) &
+                                     Q(destination__id__in=destination_ids)))
 
         if self.action == ("list", "retrieve"):
             queryset = Route.objects.prefetch_related("source")
@@ -184,7 +192,8 @@ class RouteViewSet(
             OpenApiParameter(
                 "destination",
                 type={"type": "string", "items": {"type": "name"}},
-                description="Filter by destination station id ex. ?destination=Vien",
+                description="Filter by destination station id ex. "
+                            "?destination=Vien",
 
             ),
         ]
