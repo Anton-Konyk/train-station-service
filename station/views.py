@@ -101,12 +101,13 @@ class TrainViewSet(
         if facilities:
             facilities_ids = self._params_to_ints(facilities)
             queryset = (
-                Train.objects.filter(
+                Train.objects.prefetch_related("facilities").filter(
                     facilities__id__in=facilities_ids
                 ).distinct())
 
         if self.action == ("list", "retrieve"):
-            queryset = Train.objects.prefetch_related("facilities")
+            queryset = (Train.objects.prefetch_related("facilities").
+                        select_related("train_type"))
 
         return queryset
 
@@ -159,25 +160,27 @@ class RouteViewSet(
         source = self.request.query_params.get("source")
         destination = self.request.query_params.get("destination")
         if source:
-            source_ids = (Station.objects.filter(name__icontains=source).
-                          values_list("id"))
+            source_ids = (Station.objects.
+                          filter(name__icontains=source).
+                          values_list("id")
+                          )
             queryset = Route.objects.filter(source__id__in=source_ids)
         if destination:
-            destination_ids = Station.objects.filter(
-                name__icontains=destination).values_list("id")
+            destination_ids = (Station.objects.
+                               filter(name__icontains=destination).
+                               values_list("id")
+                               )
             queryset = (
                 Route.objects.filter(destination__id__in=destination_ids))
         if source and destination:
-            source_ids = (Station.objects.filter(name__icontains=source).
-                          values_list("id"))
-            destination_ids = Station.objects.filter(
-                name__icontains=destination).values_list("id")
+            print(source_ids, destination_ids)
             queryset = (
-                Route.objects.filter(Q(source__id__in=source_ids) &
-                                     Q(destination__id__in=destination_ids)))
+                Route.objects.select_related("source", "destination").
+                filter(Q(source__id__in=source_ids) &
+                       Q(destination__id__in=destination_ids)))
 
         if self.action == ("list", "retrieve"):
-            queryset = Route.objects.prefetch_related("source")
+            queryset = Route.objects.select_related("source", "destination")
 
         return queryset
 
@@ -224,16 +227,25 @@ class JourneyViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         if self.action == "list":
             queryset = (
-                queryset
-                .select_related("train")
-                .annotate(
+                queryset.
+                select_related("train").
+                prefetch_related("crews").
+                select_related("train__train_type").
+                prefetch_related("train__facilities").
+                prefetch_related("route").
+                annotate(
                     tickets_available=(
                      F("train__cargo_num") * F("train__places_in_cargo")
                      - Count("tickets"))
                 )
             )
         elif self.action == "retrieve":
-            queryset = queryset.prefetch_related("crews")
+            queryset = (queryset.select_related("train").
+                        prefetch_related("crews").
+                        select_related("train__train_type").
+                        prefetch_related("train__facilities").
+                        prefetch_related("route")
+                        )
         return queryset.order_by("id")
 
 
@@ -253,6 +265,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         if self.action == "list":
             queryset = queryset.prefetch_related("tickets__journey__train")
+
         return queryset
 
     def perform_create(self, serializer):
