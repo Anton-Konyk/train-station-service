@@ -37,7 +37,7 @@ def sample_train(**params) -> Train:
     return Train.objects.create(**defaults)
 
 
-def detail_url(train_id):  # http://127.0.0.1:8000/api/v1/station/trains/<train_id>/
+def detail_url(train_id):
     return reverse("station:train-detail", args=[train_id])
 
 
@@ -191,9 +191,18 @@ class AuthenticatedTrainApiTests(TestCase):
             TrainListSerializer(train_with_facility_1))
         serializer_train_with_facility_2_facility_2 = (
             TrainListSerializer(train_with_facility_2))
-        self.assertIn(serializer_train_facility_1.data, res.data["results"])
-        self.assertIn(serializer_train_with_facility_2_facility_2.data, res.data["results"])
-        self.assertNotIn(serializer_without_facilities.data, res.data["results"])
+        self.assertIn(
+            serializer_train_facility_1.data,
+            res.data["results"]
+        )
+        self.assertIn(
+            serializer_train_with_facility_2_facility_2.data,
+            res.data["results"]
+        )
+        self.assertNotIn(
+            serializer_without_facilities.data,
+            res.data["results"]
+        )
 
     def test_retrieve_train_detail(self):
         train = sample_train()
