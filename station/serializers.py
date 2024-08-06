@@ -114,8 +114,14 @@ class JourneySerializer(serializers.ModelSerializer):
 
 
 class JourneyListSerializer(serializers.ModelSerializer):
-    train_type_name = serializers.CharField(source="train.train_type.name", read_only=True)
-    train_type_image = serializers.CharField(source="train.train_type.image", read_only=True)
+    train_type_name = serializers.CharField(
+        source="train.train_type.name",
+        read_only=True
+    )
+    train_type_image = serializers.CharField(
+        source="train.train_type.image",
+        read_only=True
+    )
     train_facilities = serializers.SlugRelatedField(
         source="train.facilities",
         read_only=True,
