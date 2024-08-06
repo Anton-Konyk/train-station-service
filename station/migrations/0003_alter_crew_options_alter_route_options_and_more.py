@@ -32,12 +32,16 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name="station",
-            index=models.Index(fields=["name"], name="station_sta_name_7e5a06_idx"),
+            index=models.Index(
+                fields=["name"],
+                name="station_sta_name_7e5a06_idx"
+            ),
         ),
         migrations.AddIndex(
             model_name="station",
             index=models.Index(
-                fields=["latitude", "longitude"], name="station_sta_latitud_9644e0_idx"
+                fields=["latitude", "longitude"],
+                name="station_sta_latitud_9644e0_idx"
             ),
         ),
     ]
