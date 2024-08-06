@@ -19,14 +19,16 @@ class Migration(migrations.Migration):
             model_name="order",
             name="user",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL
             ),
         ),
         migrations.AddField(
             model_name="journey",
             name="route",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="station.route"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="station.route"
             ),
         ),
         migrations.AddField(
@@ -76,7 +78,8 @@ class Migration(migrations.Migration):
             model_name="train",
             name="train_type",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="station.traintype"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="station.traintype"
             ),
         ),
         migrations.AlterUniqueTogether(
