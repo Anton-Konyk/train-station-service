@@ -73,8 +73,14 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("name", models.CharField(max_length=255, unique=True)),
-                ("latitude", models.DecimalField(decimal_places=7, max_digits=9)),
-                ("longitude", models.DecimalField(decimal_places=7, max_digits=10)),
+                ("latitude", models.DecimalField(
+                    decimal_places=7,
+                    max_digits=9)
+                 ),
+                ("longitude", models.DecimalField(
+                    decimal_places=7,
+                    max_digits=10)
+                 ),
             ],
             options={
                 "ordering": ["name"],
@@ -135,7 +141,8 @@ class Migration(migrations.Migration):
                 (
                     "image",
                     models.ImageField(
-                        null=True, upload_to=station.models.movie_image_file_path
+                        null=True,
+                        upload_to=station.models.movie_image_file_path
                     ),
                 ),
             ],
@@ -156,7 +163,10 @@ class Migration(migrations.Migration):
                 ("arrival_time", models.DateTimeField()),
                 (
                     "crews",
-                    models.ManyToManyField(related_name="journeys", to="station.crew"),
+                    models.ManyToManyField(
+                        related_name="journeys",
+                        to="station.crew"
+                    ),
                 ),
             ],
         ),
