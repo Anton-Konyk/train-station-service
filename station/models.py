@@ -52,7 +52,10 @@ class Train(models.Model):
     cargo_num = models.IntegerField()
     places_in_cargo = models.IntegerField()
     train_type = models.ForeignKey(TrainType, on_delete=models.CASCADE)
-    facilities = models.ManyToManyField(Facility, related_name="trains", blank=True)
+    facilities = models.ManyToManyField(
+        Facility,
+        related_name="trains", blank=True
+    )
 
     @property
     def num_seats(self):
@@ -116,16 +119,30 @@ class Station(models.Model):
 
 
 class Route(models.Model):
-    source = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="route_from")
-    destination = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="route_to")
+    source = models.ForeignKey(
+        Station,
+        on_delete=models.CASCADE,
+        related_name="route_from"
+    )
+    destination = models.ForeignKey(
+        Station,
+        on_delete=models.CASCADE,
+        related_name="route_to"
+    )
     distance = models.IntegerField()
 
     def __str__(self):
-        return f"{self.source.name} -> {self.destination.name} ({self.distance} km)"
+        return (
+            f"{self.source.name} -> "
+            f"{self.destination.name} "
+            f"({self.distance} km)"
+        )
 
     def clean(self):
         if self.source == self.destination:
-            raise ValidationError("Source and destination stations cannot be the same.")
+            raise ValidationError(
+                "Source and destination stations cannot be the same."
+            )
         if self.distance <= 0:
             raise ValidationError("Distance must be above zero")
 
@@ -155,7 +172,11 @@ class Journey(models.Model):
     arrival_time = models.DateTimeField()
 
     def __str__(self):
-        return f"{self.route}, train: {self.train}, departure: {self.departure_time}"
+        return (
+            f"{self.route}, "
+            f"train: {self.train}, "
+            f"departure: {self.departure_time}"
+        )
 
 
 class Ticket(models.Model):
