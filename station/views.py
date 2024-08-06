@@ -93,7 +93,7 @@ class TrainViewSet(
             return TrainListSerializer
         elif self.action == "retrieve":
             return TrainRetrieveSerializer
-        return super().get_serializer_class()  #TrainSerializer
+        return super().get_serializer_class()
 
     def get_queryset(self):
         queryset = self.queryset
