@@ -1,0 +1,415 @@
+[
+  {
+    "model": "station.crew",
+    "pk": 1,
+    "fields": {
+      "first_name": "Andy",
+      "last_name": "Speed"
+    }
+  },
+  {
+    "model": "station.crew",
+    "pk": 2,
+    "fields": {
+      "first_name": "Piter",
+      "last_name": "Strong"
+    }
+  },
+  {
+    "model": "station.crew",
+    "pk": 3,
+    "fields": {
+      "first_name": "Helena",
+      "last_name": "Cool"
+    }
+  },
+  {
+    "model": "station.crew",
+    "pk": 4,
+    "fields": {
+      "first_name": "Jack",
+      "last_name": "Quick"
+    }
+  },
+  {
+    "model": "station.crew",
+    "pk": 5,
+    "fields": {
+      "first_name": "Joanne",
+      "last_name": "Black"
+    }
+  },
+  {
+    "model": "station.crew",
+    "pk": 6,
+    "fields": {
+      "first_name": "Taras",
+      "last_name": "Seed"
+    }
+  },
+  {
+    "model": "station.facility",
+    "pk": 1,
+    "fields": {
+      "name": "Coffe for free"
+    }
+  },
+  {
+    "model": "station.facility",
+    "pk": 5,
+    "fields": {
+      "name": "Improved seats"
+    }
+  },
+  {
+    "model": "station.facility",
+    "pk": 3,
+    "fields": {
+      "name": "Personal air conditioner"
+    }
+  },
+  {
+    "model": "station.facility",
+    "pk": 2,
+    "fields": {
+      "name": "WC"
+    }
+  },
+  {
+    "model": "station.facility",
+    "pk": 4,
+    "fields": {
+      "name": "Wi-Fi"
+    }
+  },
+  {
+    "model": "station.traintype",
+    "pk": 1,
+    "fields": {
+      "name": "AVE",
+      "image": ""
+    }
+  },
+  {
+    "model": "station.traintype",
+    "pk": 2,
+    "fields": {
+      "name": "Inter_City",
+      "image": ""
+    }
+  },
+  {
+    "model": "station.traintype",
+    "pk": 3,
+    "fields": {
+      "name": "Regional_train",
+      "image": ""
+    }
+  },
+  {
+    "model": "station.traintype",
+    "pk": 4,
+    "fields": {
+      "name": "TGV",
+      "image": ""
+    }
+  },
+  {
+    "model": "station.train",
+    "pk": 1,
+    "fields": {
+      "number": 10001,
+      "cargo_num": 5,
+      "places_in_cargo": 60,
+      "train_type": 1,
+      "facilities": [
+        1,
+        3,
+        2
+      ]
+    }
+  },
+  {
+    "model": "station.train",
+    "pk": 2,
+    "fields": {
+      "number": 10002,
+      "cargo_num": 4,
+      "places_in_cargo": 50,
+      "train_type": 2,
+      "facilities": [
+        5,
+        3,
+        2
+      ]
+    }
+  },
+  {
+    "model": "station.train",
+    "pk": 3,
+    "fields": {
+      "number": 10003,
+      "cargo_num": 6,
+      "places_in_cargo": 45,
+      "train_type": 3,
+      "facilities": [
+        1,
+        5,
+        2
+      ]
+    }
+  },
+  {
+    "model": "station.train",
+    "pk": 4,
+    "fields": {
+      "number": 10004,
+      "cargo_num": 5,
+      "places_in_cargo": 48,
+      "train_type": 4,
+      "facilities": [
+        1,
+        5,
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "model": "station.station",
+    "pk": 5,
+    "fields": {
+      "name": "Berlin",
+      "latitude": "52.5243700",
+      "longitude": "13.4105300"
+    }
+  },
+  {
+    "model": "station.station",
+    "pk": 7,
+    "fields": {
+      "name": "Bratislava",
+      "latitude": "48.1752330",
+      "longitude": "17.1651190"
+    }
+  },
+  {
+    "model": "station.station",
+    "pk": 6,
+    "fields": {
+      "name": "Brno",
+      "latitude": "49.1924690",
+      "longitude": "16.6051240"
+    }
+  },
+  {
+    "model": "station.station",
+    "pk": 2,
+    "fields": {
+      "name": "Krakow",
+      "latitude": "50.0614000",
+      "longitude": "19.9366000"
+    }
+  },
+  {
+    "model": "station.station",
+    "pk": 3,
+    "fields": {
+      "name": "Prague",
+      "latitude": "50.0755400",
+      "longitude": "14.4378000"
+    }
+  },
+  {
+    "model": "station.station",
+    "pk": 8,
+    "fields": {
+      "name": "Vein",
+      "latitude": "48.2085000",
+      "longitude": "16.3721000"
+    }
+  },
+  {
+    "model": "station.station",
+    "pk": 1,
+    "fields": {
+      "name": "Warsaw",
+      "latitude": "52.2298000",
+      "longitude": "21.0118000"
+    }
+  },
+  {
+    "model": "station.station",
+    "pk": 4,
+    "fields": {
+      "name": "Wroclaw",
+      "latitude": "51.1112520",
+      "longitude": "17.0383460"
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 1,
+    "fields": {
+      "source": 5,
+      "destination": 1,
+      "distance": 570
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 2,
+    "fields": {
+      "source": 5,
+      "destination": 8,
+      "distance": 680
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 3,
+    "fields": {
+      "source": 2,
+      "destination": 1,
+      "distance": 300
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 4,
+    "fields": {
+      "source": 4,
+      "destination": 8,
+      "distance": 450
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 5,
+    "fields": {
+      "source": 6,
+      "destination": 7,
+      "distance": 130
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 6,
+    "fields": {
+      "source": 1,
+      "destination": 7,
+      "distance": 530
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 7,
+    "fields": {
+      "source": 7,
+      "destination": 1,
+      "distance": 530
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 8,
+    "fields": {
+      "source": 7,
+      "destination": 6,
+      "distance": 130
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 9,
+    "fields": {
+      "source": 8,
+      "destination": 4,
+      "distance": 450
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 10,
+    "fields": {
+      "source": 1,
+      "destination": 2,
+      "distance": 300
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 11,
+    "fields": {
+      "source": 8,
+      "destination": 5,
+      "distance": 680
+    }
+  },
+  {
+    "model": "station.route",
+    "pk": 12,
+    "fields": {
+      "source": 1,
+      "destination": 5,
+      "distance": 570
+    }
+  },
+  {
+    "model": "station.journey",
+    "pk": 1,
+    "fields": {
+      "route": 2,
+      "train": 2,
+      "departure_time": "2024-08-20T19:05:00Z",
+      "arrival_time": "2024-08-21T07:20:00Z",
+      "crews": [
+        1,
+        6
+      ]
+    }
+  },
+  {
+    "model": "station.journey",
+    "pk": 2,
+    "fields": {
+      "route": 5,
+      "train": 1,
+      "departure_time": "2024-08-19T16:00:00Z",
+      "arrival_time": "2024-08-19T18:50:00Z",
+      "crews": [
+        2,
+        3,
+        4
+      ]
+    }
+  },
+  {
+    "model": "station.journey",
+    "pk": 3,
+    "fields": {
+      "route": 11,
+      "train": 1,
+      "departure_time": "2024-08-21T18:15:00Z",
+      "arrival_time": "2024-08-22T05:40:00Z",
+      "crews": [
+        4,
+        6
+      ]
+    }
+  },
+  {
+    "model": "station.journey",
+    "pk": 4,
+    "fields": {
+      "route": 3,
+      "train": 3,
+      "departure_time": "2024-08-18T07:10:00Z",
+      "arrival_time": "2024-08-18T11:25:00Z",
+      "crews": [
+        1,
+        3
+      ]
+    }
+  }
+]
